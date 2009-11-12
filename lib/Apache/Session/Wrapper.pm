@@ -4,7 +4,8 @@ use strict;
 
 use vars qw($VERSION);
 
-$VERSION = '0.33';
+$VERSION = '0.33_01';
+$VERSION = eval $VERSION;
 
 use base qw(Class::Container);
 
@@ -311,7 +312,22 @@ sub _SetValidParams {
     {
         for my $p ( map { @$_ } map { @$_ } values %$hash )
         {
-            $extra{$p} = { optional => 1 };
+            my $h;
+            if ( ref $p ) {
+                # we assume its a hash of names/parameter specifications
+                $h = $p;
+            } elsif (!$params{$p}) {
+                # its a new parameter defined by a scalar, default to SCALAR value
+                $h = { $p => { optional => 1, type => SCALAR } };
+            } else {
+                # its a scalar option we already know.
+                next;
+            }
+            # now expand the options
+            foreach my $name (keys %$h) {
+                next if $params{$name};
+                $extra{$p} = $h->{$name};
+            }
         }
     }
 
@@ -350,7 +366,7 @@ sub RegisterClass {
     my $class = shift;
     my %p = validate( @_, { name => { type => SCALAR },
                             required => { type => SCALAR | ARRAYREF, default => [ [ ] ] },
-                            optional => { type => SCALAR | ARRAYREF, default => [ [ ] ] },
+                            optional => { type => SCALAR | ARRAYREF, default => [ ] },
                           },
                     );
 
@@ -378,7 +394,7 @@ sub RegisterFlexClass {
                                     },
                             name => { type => SCALAR },
                             required => { type => SCALAR | ARRAYREF, default => [ [ ] ] },
-                            optional => { type => SCALAR | ARRAYREF, default => [ [ ] ] },
+                            optional => { type => SCALAR | ARRAYREF, default => [ ]  },
                           },
                     );
 
@@ -701,7 +717,7 @@ sub _handle_tie_error
     else
     {
         my $error =
-            $@ ? $@ : "Tying to Apache::Session::$self->{session_class_piece} failed but did not throw an exception";
+            $err ? $err : "Tying to Apache::Session::$self->{session_class_piece} failed but did not throw an exception";
         die $error;
     }
 }

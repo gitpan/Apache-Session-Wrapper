@@ -1,27 +1,28 @@
----
-name: Apache-Session-Wrapper
-version: 0.33
-author:
-  - 'Dave Rolsky, <autarch@urth.org>'
-abstract: A simple wrapper around Apache::Session
-license: perl
-resources:
-  license: http://dev.perl.org/licenses/
-requires:
-  Apache::Session: 1.81
-  Class::Container: 0
-  Exception::Class: 0
-  Params::Validate: 0.7
-  Scalar::Util: 0
+--- #YAML:1.0
+name:               Apache-Session-Wrapper
+version:            0.33_01
+abstract:           ~
+author:  []
+license:            unknown
+distribution_type:  module
+configure_requires:
+    ExtUtils::MakeMaker:  0
 build_requires:
-  File::Spec: 0
-  File::Temp: 0
-  Module::Build: 0
-provides:
-  Apache::Session::Wrapper:
-    file: lib/Apache/Session/Wrapper.pm
-    version: 0.33
-generated_by: Module::Build version 0.2801
+    ExtUtils::MakeMaker:  0
+requires:
+    Apache::Session:   1.81
+    Class::Container:  0
+    Exception::Class:  0
+    File::Spec:        0
+    File::Temp:        0
+    Module::Build:     0
+    Params::Validate:  0.7
+    Scalar::Util:      0
+no_index:
+    directory:
+        - t
+        - inc
+generated_by:       ExtUtils::MakeMaker version 6.54
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4
